@@ -56,6 +56,26 @@
   --sp-xl:  32px;
   --sp-xxl: 48px;
   --sp-section: 96px;
+  --nav-bg: rgba(250, 249, 245, 0.92);
+}
+
+[data-theme="dark"] {
+  --ink:                  #f0ede8;
+  --body:                 #c4c0b8;
+  --body-strong:          #e8e4de;
+  --muted:                #8a8780;
+  --muted-soft:           #6e6b64;
+  --hairline:             #2e2c28;
+  --hairline-soft:        #252320;
+  --canvas:               #141210;
+  --surface-soft:         #1a1815;
+  --surface-card:         #1f1d1a;
+  --surface-cream-strong: #252320;
+  --surface-dark:         #0e0d0b;
+  --surface-dark-elevated:#1a1815;
+  --surface-dark-soft:    #161411;
+  --primary-disabled:     #3a2e28;
+  --nav-bg: rgba(20, 18, 16, 0.92);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -122,7 +142,7 @@ nav {
   top: 0; left: 0; right: 0;
   z-index: 100;
   height: 64px;
-  background: rgba(250, 249, 245, 0.92);
+  background: var(--nav-bg);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--hairline);
   display: flex;
@@ -204,6 +224,20 @@ nav {
   text-decoration: none;
 }
 .btn-secondary:hover { border-color: var(--muted-soft); background: var(--surface-soft); }
+
+/* ── DARK MODE TOGGLE ── */
+.theme-toggle {
+  width: 36px; height: 36px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--hairline);
+  background: var(--canvas);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  transition: border-color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+.theme-toggle:hover { border-color: var(--muted-soft); background: var(--surface-soft); }
 
 /* ── HERO ── */
 .hero {
@@ -837,7 +871,12 @@ footer {
       <li><a href="#pricing">Pricing</a></li>
       <li><a href="#faq">FAQ</a></li>
     </ul>
-    <a href="#contact" class="btn-primary">Book Free Demo →</a>
+    <div style="display:flex;align-items:center;gap:var(--sp-sm)">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <span class="theme-icon">☀️</span>
+      </button>
+      <a href="#contact" class="btn-primary">Book Free Demo →</a>
+    </div>
   </div>
 </nav>
 
@@ -1346,6 +1385,26 @@ footer {
 </footer>
 
 <script>
+  // Dark mode
+  const toggle = document.getElementById('themeToggle');
+  const icon   = toggle.querySelector('.theme-icon');
+  const stored = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const initDark = stored === 'dark' || (!stored && prefersDark);
+  if (initDark) { document.documentElement.setAttribute('data-theme', 'dark'); icon.textContent = '🌙'; }
+  toggle.addEventListener('click', () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      document.documentElement.removeAttribute('data-theme');
+      icon.textContent = '☀️';
+      localStorage.setItem('theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      icon.textContent = '🌙';
+      localStorage.setItem('theme', 'dark');
+    }
+  });
+
   // Scroll reveal
   const observer = new IntersectionObserver(
     entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }),
