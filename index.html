@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexabot — WhatsApp AI Sales Automation for Indian Businesses</title>
+<meta name="description" content="We turn your WhatsApp into a 24/7 AI sales machine that qualifies leads, books appointments, and follows up automatically — while you sleep.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ── DESIGN TOKENS (from DESIGN.md) ── */
+:root {
+  /* Colors */
+  --primary:            #cc785c;
+  --primary-active:     #a9583e;
+  --primary-disabled:   #e6dfd8;
+  --ink:                #141413;
+  --body:               #3d3d3a;
+  --body-strong:        #252523;
+  --muted:              #6c6a64;
+  --muted-soft:         #8e8b82;
+  --hairline:           #e6dfd8;
+  --hairline-soft:      #ebe6df;
+  --canvas:             #faf9f5;
+  --surface-soft:       #f5f0e8;
+  --surface-card:       #efe9de;
+  --surface-cream-strong: #e8e0d2;
+  --surface-dark:       #181715;
+  --surface-dark-elevated: #252320;
+  --surface-dark-soft:  #1f1e1b;
+  --on-primary:         #ffffff;
+  --on-dark:            #faf9f5;
+  --on-dark-soft:       #a09d96;
+  --accent-teal:        #5db8a6;
+  --accent-amber:       #e8a55a;
+  --success:            #5db872;
+  --warning:            #d4a017;
+  --error:              #c64545;
+
+  /* Rounded */
+  --r-xs:   4px;
+  --r-sm:   6px;
+  --r-md:   8px;
+  --r-lg:   12px;
+  --r-xl:   16px;
+  --r-pill: 9999px;
+
+  /* Spacing */
+  --sp-xxs: 4px;
+  --sp-xs:  8px;
+  --sp-sm:  12px;
+  --sp-md:  16px;
+  --sp-lg:  24px;
+  --sp-xl:  32px;
+  --sp-xxl: 48px;
+  --sp-section: 96px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--canvas);
+  color: var(--body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ── TYPOGRAPHY HELPERS ── */
+.display-xl {
+  font-family: 'Cormorant Garamond', 'Tiempos Headline', Georgia, serif;
+  font-size: clamp(40px, 6vw, 64px);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  color: var(--ink);
+}
+.display-lg {
+  font-family: 'Cormorant Garamond', 'Tiempos Headline', Georgia, serif;
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  color: var(--ink);
+}
+.display-md {
+  font-family: 'Cormorant Garamond', 'Tiempos Headline', Georgia, serif;
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+}
+.display-sm {
+  font-family: 'Cormorant Garamond', 'Tiempos Headline', Georgia, serif;
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+  color: var(--ink);
+}
+.title-md { font-size: 18px; font-weight: 500; line-height: 1.4; color: var(--ink); }
+.title-sm { font-size: 16px; font-weight: 500; line-height: 1.4; color: var(--ink); }
+.body-md  { font-size: 16px; font-weight: 400; line-height: 1.55; color: var(--body); }
+.body-sm  { font-size: 14px; font-weight: 400; line-height: 1.55; color: var(--body); }
+.caption  { font-size: 13px; font-weight: 500; line-height: 1.4; }
+.caption-upper { font-size: 12px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; }
+
+/* ── LAYOUT ── */
+.container { max-width: 1120px; margin: 0 auto; padding: 0 var(--sp-xl); }
+section { padding: var(--sp-section) 0; }
+
+/* ── TOP NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  height: 64px;
+  background: rgba(250, 249, 245, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--hairline);
+  display: flex;
+  align-items: center;
+}
+.nav-inner {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 var(--sp-xl);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-logo .spike {
+  width: 20px; height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.nav-logo .spike svg { width: 16px; height: 16px; }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xl);
+  list-style: none;
+}
+.nav-links a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+  transition: color 0.15s;
+}
+.nav-links a:hover { color: var(--ink); }
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--primary);
+  color: var(--on-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 20px;
+  height: 40px;
+  border-radius: var(--r-md);
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn-primary:hover { background: var(--primary-active); }
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 20px;
+  height: 40px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--hairline);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  text-decoration: none;
+}
+.btn-secondary:hover { border-color: var(--muted-soft); background: var(--surface-soft); }
+
+/* ── HERO ── */
+.hero {
+  padding-top: calc(64px + var(--sp-section));
+  padding-bottom: var(--sp-section);
+  background: var(--canvas);
+}
+.hero-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 var(--sp-xl);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  background: var(--surface-card);
+  border: 1px solid var(--hairline);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  margin-bottom: var(--sp-lg);
+}
+.hero-badge .dot {
+  width: 6px; height: 6px;
+  background: var(--success);
+  border-radius: 50%;
+  animation: blink 2.4s infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+.hero h1 { margin-bottom: var(--sp-lg); }
+.hero h1 em { font-style: italic; color: var(--primary); }
+.hero-sub {
+  font-size: 17px;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: var(--sp-xxl);
+  max-width: 480px;
+}
+.hero-actions { display: flex; gap: var(--sp-sm); flex-wrap: wrap; }
+.hero-stats {
+  display: flex;
+  gap: var(--sp-xxl);
+  margin-top: var(--sp-xxl);
+  padding-top: var(--sp-xxl);
+  border-top: 1px solid var(--hairline);
+}
+.hero-stat .s-num {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 34px;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.hero-stat .s-num em { font-style: normal; color: var(--primary); }
+.hero-stat .s-label { font-size: 13px; color: var(--muted); line-height: 1.4; }
+
+/* Hero right: chat mockup card (dark surface) */
+.hero-card {
+  background: var(--surface-dark);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.hero-card-bar {
+  padding: var(--sp-md) var(--sp-lg);
+  border-bottom: 1px solid var(--surface-dark-elevated);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+}
+.bar-dots { display: flex; gap: 6px; }
+.bar-dot { width: 10px; height: 10px; border-radius: 50%; }
+.bar-dot.red   { background: #ff5f57; }
+.bar-dot.amber { background: #febc2e; }
+.bar-dot.green { background: #28c840; }
+.bar-title {
+  flex: 1;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--on-dark-soft);
+}
+.bar-status {
+  font-size: 12px;
+  color: var(--success);
+  font-weight: 500;
+}
+.chat-body { padding: var(--sp-lg); display: flex; flex-direction: column; gap: var(--sp-sm); }
+.msg {
+  max-width: 84%;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  border-radius: var(--r-lg);
+}
+.msg.bot {
+  background: var(--surface-dark-elevated);
+  color: var(--on-dark);
+  border-radius: var(--r-xs) var(--r-lg) var(--r-lg) var(--r-lg);
+  align-self: flex-start;
+}
+.msg.user {
+  background: var(--primary);
+  color: var(--on-primary);
+  border-radius: var(--r-lg) var(--r-xs) var(--r-lg) var(--r-lg);
+  align-self: flex-end;
+}
+.msg-time {
+  font-size: 11px;
+  opacity: 0.45;
+  margin-top: 4px;
+  display: block;
+}
+.msg.user .msg-time { text-align: right; }
+.typing-row {
+  display: flex;
+  gap: 4px;
+  padding: 12px 14px;
+  background: var(--surface-dark-elevated);
+  border-radius: var(--r-xs) var(--r-lg) var(--r-lg) var(--r-lg);
+  align-self: flex-start;
+  width: 56px;
+}
+.typing-row span {
+  width: 5px; height: 5px;
+  background: var(--on-dark-soft);
+  border-radius: 50%;
+  animation: bounce 1.2s infinite;
+}
+.typing-row span:nth-child(2) { animation-delay: 0.15s; }
+.typing-row span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50%       { transform: translateY(-4px); opacity: 1; }
+}
+
+/* ── SECTION HEADER ── */
+.section-header { margin-bottom: var(--sp-xxl); }
+.section-label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: var(--sp-sm);
+  display: block;
+}
+.section-sub {
+  font-size: 17px;
+  color: var(--muted);
+  line-height: 1.65;
+  max-width: 520px;
+  margin-top: var(--sp-md);
+}
+
+/* ── PROBLEM BAND (surface-card) ── */
+.band-card { background: var(--surface-card); }
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-md);
+}
+.problem-card {
+  background: var(--canvas);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-lg);
+  padding: var(--sp-xl);
+}
+.problem-card .p-icon { font-size: 24px; margin-bottom: var(--sp-md); display: block; }
+.problem-card h3 { font-size: 16px; font-weight: 500; color: var(--ink); margin-bottom: var(--sp-xs); }
+.problem-card p  { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+/* ── HOW IT WORKS (canvas) ── */
+.steps-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-xl);
+  position: relative;
+}
+.steps-row::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: calc(12.5% + 20px);
+  right: calc(12.5% + 20px);
+  height: 1px;
+  background: var(--hairline);
+}
+.step { text-align: center; position: relative; }
+.step-num {
+  width: 40px; height: 40px;
+  background: var(--canvas);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--primary);
+  margin: 0 auto var(--sp-lg);
+  position: relative;
+  z-index: 1;
+  background: var(--canvas);
+}
+.step h3 { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: var(--sp-xs); }
+.step p  { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+/* ── FEATURES BAND (dark) ── */
+.band-dark { background: var(--surface-dark); }
+.band-dark .section-label { color: var(--accent-teal); }
+.band-dark .display-lg { color: var(--on-dark); }
+.band-dark .section-sub { color: var(--on-dark-soft); }
+.features-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+.feature-list { display: flex; flex-direction: column; gap: var(--sp-xl); }
+.feature-item { display: flex; gap: var(--sp-md); align-items: flex-start; }
+.feature-icon {
+  width: 40px; height: 40px;
+  background: var(--surface-dark-elevated);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: var(--r-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.feature-item h3 { font-size: 15px; font-weight: 500; color: var(--on-dark); margin-bottom: 4px; }
+.feature-item p  { font-size: 14px; color: var(--on-dark-soft); line-height: 1.6; }
+
+/* Code window card */
+.code-card {
+  background: var(--surface-dark-soft);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.code-card-bar {
+  padding: var(--sp-sm) var(--sp-md);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  background: var(--surface-dark-elevated);
+}
+.code-card-bar .bar-dots { display: flex; gap: 5px; }
+.code-card-bar .caption-upper { color: var(--on-dark-soft); margin-left: auto; }
+.code-body {
+  padding: var(--sp-lg);
+  font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--on-dark-soft);
+}
+.code-body .c-comment { color: #5c6a73; }
+.code-body .c-key     { color: #e8a55a; }
+.code-body .c-str     { color: #5db8a6; }
+.code-body .c-val     { color: #cc785c; }
+.code-body .c-bool    { color: #a78bfa; }
+.code-row { display: flex; gap: var(--sp-sm); }
+.code-ln  { color: #3a3835; user-select: none; min-width: 20px; text-align: right; }
+
+/* ── RESULTS BAND (canvas) ── */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-md);
+  margin-bottom: var(--sp-xxl);
+}
+.result-card {
+  background: var(--surface-card);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-lg);
+  padding: var(--sp-xl) var(--sp-lg);
+  text-align: center;
+}
+.result-card .r-num {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 48px;
+  font-weight: 400;
+  letter-spacing: -1px;
+  color: var(--primary);
+  line-height: 1;
+  margin-bottom: var(--sp-xs);
+}
+.result-card .r-label { font-size: 14px; color: var(--muted); line-height: 1.4; }
+
+.case-study {
+  background: var(--surface-dark);
+  border-radius: var(--r-lg);
+  padding: var(--sp-xl);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--sp-xxl);
+  align-items: start;
+}
+.case-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  background: rgba(204,120,92,0.15);
+  border: 1px solid rgba(204,120,92,0.3);
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: var(--r-pill);
+  margin-bottom: var(--sp-md);
+}
+.case-study h3 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 400; letter-spacing: -0.3px; color: var(--on-dark); margin-bottom: var(--sp-md); line-height: 1.2; }
+.case-study p  { font-size: 15px; color: var(--on-dark-soft); line-height: 1.7; }
+.case-metrics  { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-lg); }
+.cm-val {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 36px;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+  color: var(--on-dark);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.cm-val span { color: var(--primary); }
+.cm-label { font-size: 13px; color: var(--on-dark-soft); line-height: 1.4; }
+
+/* ── PRICING BAND (surface-card) ── */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-md);
+  align-items: start;
+}
+.price-card {
+  background: var(--canvas);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-lg);
+  padding: var(--sp-xl);
+  position: relative;
+}
+.price-card.featured {
+  background: var(--surface-dark);
+  border-color: transparent;
+}
+.feat-badge {
+  position: absolute;
+  top: -13px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: var(--on-primary);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+}
+.price-tier-name { font-size: 13px; font-weight: 500; color: var(--muted); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: var(--sp-md); }
+.price-card.featured .price-tier-name { color: var(--on-dark-soft); }
+.price-amount {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 52px;
+  font-weight: 400;
+  letter-spacing: -1px;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.price-card.featured .price-amount { color: var(--on-dark); }
+.price-amount .currency { font-size: 26px; vertical-align: top; margin-top: 10px; display: inline-block; }
+.price-period { font-size: 14px; color: var(--muted); margin-bottom: var(--sp-xs); }
+.price-card.featured .price-period { color: var(--on-dark-soft); }
+.price-setup {
+  font-size: 13px;
+  color: var(--muted);
+  background: var(--surface-soft);
+  border-radius: var(--r-sm);
+  padding: 6px 10px;
+  display: inline-block;
+  margin-bottom: var(--sp-xl);
+}
+.price-card.featured .price-setup { background: var(--surface-dark-elevated); color: var(--on-dark-soft); }
+.price-divider { border: none; border-top: 1px solid var(--hairline); margin-bottom: var(--sp-lg); }
+.price-card.featured .price-divider { border-color: rgba(255,255,255,0.07); }
+.price-features { list-style: none; display: flex; flex-direction: column; gap: var(--sp-sm); margin-bottom: var(--sp-xl); }
+.price-features li { display: flex; gap: var(--sp-xs); font-size: 14px; color: var(--body); line-height: 1.5; align-items: flex-start; }
+.price-card.featured .price-features li { color: var(--on-dark-soft); }
+.price-features li::before {
+  content: '✓';
+  color: var(--success);
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-size: 13px;
+}
+.price-cta {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--r-md);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--hairline);
+  background: var(--canvas);
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.price-cta:hover { border-color: var(--muted-soft); background: var(--surface-soft); }
+.price-cta.accent {
+  background: var(--primary);
+  color: var(--on-primary);
+  border-color: transparent;
+}
+.price-cta.accent:hover { background: var(--primary-active); }
+
+/* ── FAQ BAND (canvas) ── */
+.faq-list { border: 1px solid var(--hairline); border-radius: var(--r-lg); overflow: hidden; margin-top: var(--sp-xxl); }
+.faq-item { border-bottom: 1px solid var(--hairline); }
+.faq-item:last-child { border-bottom: none; }
+.faq-q {
+  width: 100%;
+  background: var(--canvas);
+  border: none;
+  padding: var(--sp-lg) var(--sp-xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sp-lg);
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.faq-q:hover { background: var(--surface-soft); }
+.faq-chev {
+  width: 28px; height: 28px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-sm);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--muted);
+  transition: transform 0.25s, background 0.15s, border-color 0.15s;
+}
+.faq-item.open .faq-chev {
+  transform: rotate(180deg);
+  background: rgba(204,120,92,0.1);
+  border-color: rgba(204,120,92,0.3);
+  color: var(--primary);
+}
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.2s;
+  background: var(--canvas);
+}
+.faq-item.open .faq-a { max-height: 320px; }
+.faq-a-inner {
+  padding: 0 var(--sp-xl) var(--sp-lg);
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* ── CTA BAND (coral) ── */
+.cta-band {
+  background: var(--primary);
+  border-radius: var(--r-lg);
+  padding: 64px;
+  text-align: center;
+  max-width: 1120px;
+  margin: 0 auto var(--sp-section);
+  padding-left: var(--sp-xl);
+  padding-right: var(--sp-xl);
+}
+.cta-band h2 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 400;
+  letter-spacing: -0.5px;
+  color: var(--on-primary);
+  line-height: 1.15;
+  margin-bottom: var(--sp-md);
+}
+.cta-band p { font-size: 17px; color: rgba(255,255,255,0.75); line-height: 1.65; margin-bottom: var(--sp-xxl); max-width: 520px; margin-left: auto; margin-right: auto; }
+.cta-form { display: flex; gap: var(--sp-sm); flex-wrap: wrap; justify-content: center; margin-bottom: var(--sp-md); }
+.cta-input {
+  padding: 10px 16px;
+  height: 44px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: var(--r-md);
+  color: var(--on-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  outline: none;
+  min-width: 200px;
+  transition: border-color 0.15s, background 0.15s;
+}
+.cta-input::placeholder { color: rgba(255,255,255,0.55); }
+.cta-input:focus { border-color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.2); }
+.btn-on-coral {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 22px;
+  height: 44px;
+  border-radius: var(--r-md);
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.btn-on-coral:hover { background: var(--surface-card); }
+.cta-note { font-size: 13px; color: rgba(255,255,255,0.55); display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--surface-dark);
+  padding: 64px 0 var(--sp-xl);
+}
+.footer-top {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, 1fr);
+  gap: var(--sp-xxl);
+  margin-bottom: var(--sp-xxl);
+  padding-bottom: var(--sp-xxl);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.footer-brand .logo {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--on-dark);
+  letter-spacing: -0.3px;
+  margin-bottom: var(--sp-md);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xs);
+}
+.footer-brand p { font-size: 14px; color: var(--on-dark-soft); line-height: 1.6; max-width: 240px; }
+.footer-col h4 { font-size: 13px; font-weight: 500; color: var(--on-dark); margin-bottom: var(--sp-md); letter-spacing: 0.3px; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: var(--sp-xs); }
+.footer-col a { font-size: 14px; color: var(--on-dark-soft); transition: color 0.15s; }
+.footer-col a:hover { color: var(--on-dark); }
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--sp-md); }
+.footer-copy { font-size: 13px; color: var(--on-dark-soft); opacity: 0.6; }
+.footer-spike { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--on-dark-soft); opacity: 0.5; }
+
+/* ── SCROLL REVEAL ── */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+.delay-1 { transition-delay: 0.08s; }
+.delay-2 { transition-delay: 0.16s; }
+.delay-3 { transition-delay: 0.24s; }
+.delay-4 { transition-delay: 0.32s; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .hero-inner       { grid-template-columns: 1fr; gap: var(--sp-xxl); }
+  .hero-card        { max-width: 480px; }
+  .features-layout  { grid-template-columns: 1fr; gap: var(--sp-xxl); }
+  .problem-grid     { grid-template-columns: 1fr 1fr; }
+  .steps-row        { grid-template-columns: 1fr 1fr; gap: var(--sp-xl) var(--sp-lg); }
+  .steps-row::before{ display: none; }
+  .results-grid     { grid-template-columns: 1fr 1fr; }
+  .case-study       { grid-template-columns: 1fr; gap: var(--sp-xl); }
+  .pricing-grid     { grid-template-columns: 1fr; max-width: 460px; margin: 0 auto; }
+  .footer-top       { grid-template-columns: 1fr 1fr; }
+  .cta-band         { padding: var(--sp-xxl) var(--sp-xl); }
+}
+@media (max-width: 600px) {
+  .container        { padding: 0 var(--sp-lg); }
+  nav               { padding: 0; }
+  .nav-inner        { padding: 0 var(--sp-lg); }
+  .nav-links        { display: none; }
+  .problem-grid     { grid-template-columns: 1fr; }
+  .results-grid     { grid-template-columns: 1fr 1fr; }
+  .hero-stats       { gap: var(--sp-xl); }
+  .footer-top       { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <span class="spike">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 1v14M1 8h14M2.93 2.93l10.14 10.14M13.07 2.93L2.93 13.07" stroke="#cc785c" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </span>
+      Nexabot
+    </div>
+    <ul class="nav-links">
+      <li><a href="#how-it-works">How it works</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a href="#contact" class="btn-primary">Book Free Demo →</a>
+  </div>
+</nav>
+
+<!-- ── HERO (canvas) ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <!-- Left -->
+    <div>
+      <div class="hero-badge reveal">
+        <span class="dot"></span>
+        WhatsApp Business API · Live in 7 days
+      </div>
+      <h1 class="display-xl reveal">
+        Turn your WhatsApp into<br>a <em>24/7 AI sales machine</em>
+      </h1>
+      <p class="hero-sub reveal">
+        Never lose a lead to slow response times again. Our AI bot qualifies leads, books appointments, answers FAQs, and follows up — automatically, while you sleep.
+      </p>
+      <div class="hero-actions reveal">
+        <a href="#contact" class="btn-primary">Get your bot — free demo</a>
+        <a href="#how-it-works" class="btn-secondary">See how it works ↓</a>
+      </div>
+      <div class="hero-stats reveal">
+        <div class="hero-stat">
+          <div class="s-num">500<em>M+</em></div>
+          <div class="s-label">WhatsApp users<br>in India</div>
+        </div>
+        <div class="hero-stat">
+          <div class="s-num">3<em>×</em></div>
+          <div class="s-label">More leads from<br>same traffic</div>
+        </div>
+        <div class="hero-stat">
+          <div class="s-num">&lt;30<em>s</em></div>
+          <div class="s-label">Average bot<br>response time</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: dark chat mockup -->
+    <div class="hero-card reveal">
+      <div class="hero-card-bar">
+        <div class="bar-dots">
+          <div class="bar-dot red"></div>
+          <div class="bar-dot amber"></div>
+          <div class="bar-dot green"></div>
+        </div>
+        <div class="bar-title">Nexabot — Sharma Properties</div>
+        <div class="bar-status">● Live</div>
+      </div>
+      <div class="chat-body" id="chatMessages">
+        <div class="msg bot">
+          Hi! 👋 Welcome to <strong>Sharma Properties</strong>. I'm the AI assistant here.<br><br>
+          Are you looking to <strong>buy, rent, or invest</strong>?
+          <span class="msg-time">10:31 PM ✓✓</span>
+        </div>
+        <div class="msg user">
+          Buy a 2BHK in Pune
+          <span class="msg-time">10:32 PM ✓✓</span>
+        </div>
+        <div class="msg bot">
+          Great! 🏠 We have excellent 2BHK options. What's your <strong>budget range</strong>?
+          <span class="msg-time">10:32 PM ✓✓</span>
+        </div>
+        <div class="msg user">
+          60–75 lakhs
+          <span class="msg-time">10:33 PM ✓✓</span>
+        </div>
+        <div class="msg bot">
+          Perfect — 3 projects match your budget exactly. 🎯<br><br>
+          Shall I <strong>send brochures</strong> and book a site visit this weekend?
+          <span class="msg-time">10:33 PM ✓✓</span>
+        </div>
+        <div class="msg user">
+          Yes please!
+          <span class="msg-time">10:33 PM ✓✓</span>
+        </div>
+        <div class="msg bot">
+          ✅ Brochures sent. You're booked for <strong>Saturday 11AM</strong> with our site team. See you then! 🏡
+          <span class="msg-time">10:33 PM ✓✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROBLEM (surface-card) ── -->
+<section class="band-card" id="problem">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">The Problem</span>
+      <h2 class="display-lg">You're losing leads every single day</h2>
+      <p class="section-sub">80% of Indian SMB customer communication happens on WhatsApp — yet 90% of businesses are responding manually, missing leads overnight, losing customers to faster competitors.</p>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-card reveal delay-1">
+        <span class="p-icon">😴</span>
+        <h3>Leads go cold overnight</h3>
+        <p>A prospect messages at 11pm asking about your property or course. You reply at 9am. They've already signed with your competitor.</p>
+      </div>
+      <div class="problem-card reveal delay-2">
+        <span class="p-icon">📋</span>
+        <h3>Manual follow-up is broken</h3>
+        <p>You spend 2–3 hours a day copy-pasting the same messages. Leads fall through cracks. There's no system — just chaos.</p>
+      </div>
+      <div class="problem-card reveal delay-3">
+        <span class="p-icon">🤷</span>
+        <h3>No lead qualification</h3>
+        <p>You talk to 20 people to find 2 serious buyers. You can't tell who's ready to buy — until you've wasted hours on the wrong people.</p>
+      </div>
+      <div class="problem-card reveal delay-1">
+        <span class="p-icon">📉</span>
+        <h3>Hiring is not the answer</h3>
+        <p>A full-time sales assistant costs ₹18,000–₹30,000/month and still can't be available 24/7. That's ₹3.6L/year for inconsistent results.</p>
+      </div>
+      <div class="problem-card reveal delay-2">
+        <span class="p-icon">⏰</span>
+        <h3>Response time kills conversion</h3>
+        <p>Replying within 5 minutes gives you a 100× better conversion rate than replying in 30 minutes. Manual response makes this impossible.</p>
+      </div>
+      <div class="problem-card reveal delay-3">
+        <span class="p-icon">🔁</span>
+        <h3>You're stuck in repeat work</h3>
+        <p>FAQ replies, catalogue sharing, appointment reminders — the same tasks every day instead of growing your business.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS (canvas) ── -->
+<section id="how-it-works">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">The Solution</span>
+      <h2 class="display-lg">Live in 7 days. Zero technical knowledge needed.</h2>
+      <p class="section-sub">We handle the entire setup. You connect your WhatsApp number and watch the leads come in.</p>
+    </div>
+    <div class="steps-row">
+      <div class="step reveal delay-1">
+        <div class="step-num">01</div>
+        <h3>Audit Call</h3>
+        <p>45 minutes understanding your business, customers, and current WhatsApp flow. No homework for you.</p>
+      </div>
+      <div class="step reveal delay-2">
+        <div class="step-num">02</div>
+        <h3>We Build Your Bot</h3>
+        <p>Fully trained on your products, FAQs, pricing, and process. Customized — not a template.</p>
+      </div>
+      <div class="step reveal delay-3">
+        <div class="step-num">03</div>
+        <h3>Go Live in 7 Days</h3>
+        <p>Your bot goes live. Leads get instant replies, get qualified, and get booked — 24/7 automatically.</p>
+      </div>
+      <div class="step reveal delay-4">
+        <div class="step-num">04</div>
+        <h3>Monitor & Improve</h3>
+        <p>Monthly report: leads captured, response rates, bookings. We refine the bot on real data.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES (dark surface) ── -->
+<section class="band-dark" id="features">
+  <div class="container">
+    <div class="features-layout">
+      <div>
+        <div class="section-header reveal">
+          <span class="section-label">What Your Bot Does</span>
+          <h2 class="display-lg" style="color:var(--on-dark)">Everything a sales rep does — for a fraction of the cost</h2>
+          <p class="section-sub" style="color:var(--on-dark-soft)">One bot. Five functions. Running 24 hours a day without a salary.</p>
+        </div>
+        <div class="feature-list">
+          <div class="feature-item reveal delay-1">
+            <div class="feature-icon">🎯</div>
+            <div>
+              <h3>Lead Qualification</h3>
+              <p>Asks 4–5 smart questions, scores every lead, sends hot leads to your phone instantly. Cold leads enter an automated nurture sequence.</p>
+            </div>
+          </div>
+          <div class="feature-item reveal delay-2">
+            <div class="feature-icon">📅</div>
+            <div>
+              <h3>Auto Appointment Booking</h3>
+              <p>Integrates with Google Calendar or Calendly. Prospects self-book — no back-and-forth, no missed calls.</p>
+            </div>
+          </div>
+          <div class="feature-item reveal delay-3">
+            <div class="feature-icon">🔄</div>
+            <div>
+              <h3>7-Day Follow-Up Sequences</h3>
+              <p>Non-responders get automatically followed up over 7 days. Most clients see 30–40% more conversions from follow-ups alone.</p>
+            </div>
+          </div>
+          <div class="feature-item reveal">
+            <div class="feature-icon">💬</div>
+            <div>
+              <h3>Smart FAQ Handling</h3>
+              <p>Trained on your product knowledge — answers pricing, delivery, availability questions with 95%+ accuracy.</p>
+            </div>
+          </div>
+          <div class="feature-item reveal">
+            <div class="feature-icon">🛍️</div>
+            <div>
+              <h3>Catalogue & Offer Sharing</h3>
+              <p>Sends product PDFs, brochures, and offer links based on what the prospect is asking about. Automated and personalized.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Code window card -->
+      <div class="code-card reveal">
+        <div class="code-card-bar">
+          <div class="bar-dots">
+            <div class="bar-dot red"></div>
+            <div class="bar-dot amber"></div>
+            <div class="bar-dot green"></div>
+          </div>
+          <span class="caption-upper" style="color:var(--on-dark-soft)">bot-config.json</span>
+        </div>
+        <div class="code-body">
+<div class="code-row"><span class="code-ln">1</span><span><span class="c-comment">// Nexabot — your bot configuration</span></span></div>
+<div class="code-row"><span class="code-ln">2</span><span>{</span></div>
+<div class="code-row"><span class="code-ln">3</span><span>&nbsp;&nbsp;<span class="c-key">"business"</span>: <span class="c-str">"Sharma Properties"</span>,</span></div>
+<div class="code-row"><span class="code-ln">4</span><span>&nbsp;&nbsp;<span class="c-key">"qualification"</span>: {</span></div>
+<div class="code-row"><span class="code-ln">5</span><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">"questions"</span>: <span class="c-val">4</span>,</span></div>
+<div class="code-row"><span class="code-ln">6</span><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">"hot_lead_score"</span>: <span class="c-val">80</span>,</span></div>
+<div class="code-row"><span class="code-ln">7</span><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">"notify_owner"</span>: <span class="c-bool">true</span></span></div>
+<div class="code-row"><span class="code-ln">8</span><span>&nbsp;&nbsp;},</span></div>
+<div class="code-row"><span class="code-ln">9</span><span>&nbsp;&nbsp;<span class="c-key">"booking"</span>: {</span></div>
+<div class="code-row"><span class="code-ln">10</span><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">"calendar"</span>: <span class="c-str">"google"</span>,</span></div>
+<div class="code-row"><span class="code-ln">11</span><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">"slot_duration"</span>: <span class="c-val">60</span>,</span></div>
+<div class="code-row"><span class="code-ln">12</span><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">"auto_confirm"</span>: <span class="c-bool">true</span></span></div>
+<div class="code-row"><span class="code-ln">13</span><span>&nbsp;&nbsp;},</span></div>
+<div class="code-row"><span class="code-ln">14</span><span>&nbsp;&nbsp;<span class="c-key">"followup"</span>: {</span></div>
+<div class="code-row"><span class="code-ln">15</span><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">"sequence_days"</span>: <span class="c-val">7</span>,</span></div>
+<div class="code-row"><span class="code-ln">16</span><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">"channel"</span>: <span class="c-str">"whatsapp"</span>,</span></div>
+<div class="code-row"><span class="code-ln">17</span><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-key">"stop_on_reply"</span>: <span class="c-bool">true</span></span></div>
+<div class="code-row"><span class="code-ln">18</span><span>&nbsp;&nbsp;},</span></div>
+<div class="code-row"><span class="code-ln">19</span><span>&nbsp;&nbsp;<span class="c-key">"availability"</span>: <span class="c-str">"24/7"</span>,</span></div>
+<div class="code-row"><span class="code-ln">20</span><span>&nbsp;&nbsp;<span class="c-key">"response_time_ms"</span>: <span class="c-val">800</span></span></div>
+<div class="code-row"><span class="code-ln">21</span><span>}</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── RESULTS (canvas) ── -->
+<section id="results">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">Real Results</span>
+      <h2 class="display-lg">Numbers that speak for themselves</h2>
+    </div>
+    <div class="results-grid">
+      <div class="result-card reveal delay-1">
+        <div class="r-num">3×</div>
+        <div class="r-label">More leads captured from the same traffic</div>
+      </div>
+      <div class="result-card reveal delay-2">
+        <div class="r-num">24/7</div>
+        <div class="r-label">Availability — no human needed overnight</div>
+      </div>
+      <div class="result-card reveal delay-3">
+        <div class="r-num">47</div>
+        <div class="r-label">Leads captured in first 10 days for a real estate client</div>
+      </div>
+      <div class="result-card reveal delay-4">
+        <div class="r-num">68%</div>
+        <div class="r-label">Of FAQs resolved without any human involvement</div>
+      </div>
+    </div>
+
+    <div class="case-study reveal">
+      <div>
+        <div class="case-badge">Case Study · Real Estate · Pune</div>
+        <h3>How a solo real estate agent captured 47 qualified leads in 10 days</h3>
+        <p>
+          Ravi Sharma was getting 30–50 WhatsApp inquiries a day and spending 4 hours just on messages — while losing leads that came in overnight. We deployed a Nexabot in 5 days, trained on his property inventory, pricing, and FAQs. The bot now qualifies every lead, shares brochures, and books site visits automatically. Ravi only talks to buyers who are ready to visit.
+        </p>
+      </div>
+      <div class="case-metrics">
+        <div>
+          <div class="cm-val">47 <span>leads</span></div>
+          <div class="cm-label">Captured in first 10 days</div>
+        </div>
+        <div>
+          <div class="cm-val">4hrs <span>saved</span></div>
+          <div class="cm-label">Per day — back to selling</div>
+        </div>
+        <div>
+          <div class="cm-val">₹0 <span>extra</span></div>
+          <div class="cm-label">Spent on ads or staff</div>
+        </div>
+        <div>
+          <div class="cm-val">2 <span>deals</span></div>
+          <div class="cm-label">Closed in the first month</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING (surface-card) ── -->
+<section class="band-card" id="pricing">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">Pricing</span>
+      <h2 class="display-lg">Less than the cost of one lead going cold</h2>
+      <p class="section-sub">Simple, transparent pricing. No contracts. Cancel anytime with 15 days' notice.</p>
+    </div>
+    <div class="pricing-grid">
+      <!-- Starter -->
+      <div class="price-card reveal delay-1">
+        <div class="price-tier-name">Starter</div>
+        <div class="price-amount"><span class="currency">₹</span>8,000</div>
+        <div class="price-period">per month</div>
+        <div class="price-setup">+ ₹12,000 one-time setup</div>
+        <hr class="price-divider">
+        <ul class="price-features">
+          <li>1 WhatsApp number connected</li>
+          <li>Up to 500 conversations / month</li>
+          <li>Lead qualification flow</li>
+          <li>FAQ automation (up to 30 Q&As)</li>
+          <li>Google Sheets lead log</li>
+          <li>Monthly performance report</li>
+          <li>Email support</li>
+        </ul>
+        <button class="price-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get started</button>
+      </div>
+
+      <!-- Growth (featured) -->
+      <div class="price-card featured reveal">
+        <div class="feat-badge">Most Popular</div>
+        <div class="price-tier-name">Growth</div>
+        <div class="price-amount"><span class="currency">₹</span>12,000</div>
+        <div class="price-period">per month</div>
+        <div class="price-setup">+ ₹15,000 one-time setup</div>
+        <hr class="price-divider" style="border-color:rgba(255,255,255,0.07)">
+        <ul class="price-features">
+          <li>1 WhatsApp Business API number</li>
+          <li>Unlimited conversations</li>
+          <li>Lead qualification + scoring</li>
+          <li>Calendar / Calendly integration</li>
+          <li>7-day follow-up sequences</li>
+          <li>Catalogue & brochure auto-send</li>
+          <li>CRM integration (Airtable / Notion)</li>
+          <li>Bi-weekly optimization calls</li>
+          <li>Priority WhatsApp support</li>
+        </ul>
+        <button class="price-cta accent" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Book free demo →</button>
+      </div>
+
+      <!-- Pro -->
+      <div class="price-card reveal delay-2">
+        <div class="price-tier-name">Pro Agency</div>
+        <div class="price-amount"><span class="currency">₹</span>20,000</div>
+        <div class="price-period">per month</div>
+        <div class="price-setup">+ ₹25,000 one-time setup</div>
+        <hr class="price-divider">
+        <ul class="price-features">
+          <li>Up to 3 WhatsApp numbers</li>
+          <li>Multi-agent handoff (AI → human)</li>
+          <li>Instagram DM automation included</li>
+          <li>Hindi + English multilingual bot</li>
+          <li>Advanced lead scoring dashboard</li>
+          <li>Custom CRM webhook integrations</li>
+          <li>Weekly strategy calls</li>
+          <li>Dedicated account manager</li>
+        </ul>
+        <button class="price-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Contact us</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ (canvas) ── -->
+<section id="faq">
+  <div class="container" style="max-width: 740px">
+    <div class="section-header reveal">
+      <span class="section-label">FAQ</span>
+      <h2 class="display-lg">Questions we get all the time</h2>
+    </div>
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Do I need to be technical to use this?
+          <span class="faq-chev">▾</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Not at all. We handle 100% of the setup — WhatsApp Business API, bot training, integrations, testing. You share your product info and answer questions on our onboarding call. No coding, no dashboards to learn unless you want to.</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How is this different from the regular WhatsApp Business app?
+          <span class="faq-chev">▾</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">The standard WhatsApp Business app requires manual replies. Nexabot uses the WhatsApp Business API — enabling full automation: AI replies, follow-up sequences, CRM sync, and calendar booking. It works even when your phone is off.</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Will my customers know they're talking to a bot?
+          <span class="faq-chev">▾</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">We design bots that are transparent — they introduce themselves as an AI assistant upfront, which builds trust. Customers in 2026 are comfortable with fast AI responses. The bot also hands off to a human for complex queries, so the experience always feels smooth.</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How long does setup take?
+          <span class="faq-chev">▾</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Most bots go live within 5–7 business days of the onboarding call. Timeline depends on how quickly we receive your product info and WhatsApp Business API approval (we help you get it). We've done setups in 3 days for well-prepared clients.</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What businesses does this work best for?
+          <span class="faq-chev">▾</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Any business where most customer communication happens on WhatsApp. Best results: real estate agents, EdTech / coaching, D2C brands, healthcare clinics, wedding planners, insurance advisors, and service businesses that take appointments. If you get 20+ messages a day, a bot pays for itself within the first month.</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Can I cancel anytime?
+          <span class="faq-chev">▾</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Yes. No annual contracts or lock-ins. Monthly retainers cancel with 15 days' notice. We're confident enough in our results that we don't need to trap you. Most clients stay because the bot keeps delivering — not because they're forced to.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA BAND (coral) ── -->
+<div class="container" id="contact">
+  <div class="cta-band reveal">
+    <h2>Ready to stop losing leads overnight?</h2>
+    <p>Book a free 30-minute demo call. We'll show you exactly how a bot would work for your specific business — live, no fluff.</p>
+    <div class="cta-form">
+      <input type="text"  class="cta-input" placeholder="Your name"         id="ctaName">
+      <input type="tel"   class="cta-input" placeholder="WhatsApp number"   id="ctaPhone">
+      <button class="btn-on-coral" onclick="handleCTA()">Book free demo →</button>
+    </div>
+    <div class="cta-note">
+      🔒 &nbsp;No spam — 30 min on Google Meet, we show you a live bot for your business
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v14M1 8h14M2.93 2.93l10.14 10.14M13.07 2.93L2.93 13.07" stroke="#cc785c" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Nexabot
+        </div>
+        <p>AI-powered WhatsApp automation for Indian businesses. Built for the ₹10K–₹80K/month market that the big agencies ignore.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#how-it-works">How it works</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#results">Results</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Industries</h4>
+        <ul>
+          <li><a href="#contact">Real Estate</a></li>
+          <li><a href="#contact">EdTech / Coaching</a></li>
+          <li><a href="#contact">D2C Brands</a></li>
+          <li><a href="#contact">Healthcare Clinics</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#contact">Book a Demo</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 Nexabot · All rights reserved</div>
+      <div class="footer-spike">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 1v14M1 8h14M2.93 2.93l10.14 10.14M13.07 2.93L2.93 13.07" stroke="#a09d96" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Built for India · Powered by AI
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver(
+    entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }),
+    { threshold: 0.08, rootMargin: '0px 0px -32px 0px' }
+  );
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // FAQ toggle
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // CTA submit
+  function handleCTA() {
+    const name  = document.getElementById('ctaName').value.trim();
+    const phone = document.getElementById('ctaPhone').value.trim();
+    if (!name || !phone) { alert('Please enter your name and WhatsApp number.'); return; }
+    // Replace 919999999999 with your actual WhatsApp number
+    const msg = encodeURIComponent(`Hi! I'm ${name}. I'd like a free Nexabot demo. My number: ${phone}`);
+    window.open(`https://wa.me/918709944212?text=${msg}`, '_blank');
+  }
+
+  // Nav hide on scroll down / show on scroll up
+  let prevY = 0;
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    const y   = window.scrollY;
+    nav.style.transition = 'transform 0.28s ease';
+    nav.style.transform  = (y > prevY && y > 80) ? 'translateY(-100%)' : 'translateY(0)';
+    prevY = y;
+  });
+</script>
+</body>
+</html>
